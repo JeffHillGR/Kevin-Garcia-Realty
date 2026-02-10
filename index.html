@@ -106,7 +106,7 @@
               <i class="fas fa-comments mr-2 w-5 text-center text-xs"></i>Testimonials
             </a>
             <a href="#recently-sold" onclick="closeMobileMenu()" class="flex items-center py-2 px-3 text-primary/90 hover:bg-primary/10 rounded text-sm">
-              <i class="fas fa-handshake mr-2 w-5 text-center text-xs"></i>Recently Sold
+              <i class="fas fa-handshake mr-2 w-5 text-center text-xs"></i>My Sold Homes
             </a>
             <a href="mailto:kevin@grar.com?subject=Open%20House%20Registration" class="flex items-center py-2 px-3 text-primary/90 hover:bg-primary/10 rounded text-sm">
               <i class="fas fa-door-open mr-2 w-5 text-center text-xs"></i>Open House Registration
@@ -197,7 +197,7 @@
             <i class="fas fa-comments mr-3 w-5 text-center"></i>Testimonials
           </a>
           <a href="#recently-sold" onclick="smoothScroll(event, 'recently-sold')" class="flex items-center w-full bg-primary hover:bg-accent text-white font-semibold py-3 px-6 rounded-lg transition">
-            <i class="fas fa-handshake mr-3 w-5 text-center"></i>Recently Sold
+            <i class="fas fa-handshake mr-3 w-5 text-center"></i>My Sold Homes
           </a>
           <a href="mailto:kevin@grar.com?subject=Open%20House%20Registration" class="flex items-center w-full bg-primary hover:bg-accent text-white font-semibold py-3 px-6 rounded-lg transition">
             <i class="fas fa-door-open mr-3 w-5 text-center"></i>Open House Registration
@@ -211,8 +211,9 @@
     <main class="flex-1">
 
       <!-- Hero Banner -->
-      <section class="relative h-[200px] lg:h-[280px] bg-gray-200 overflow-hidden">
-        <img src="images/Real-estate-interior.jpg" alt="Beautiful home interior" class="w-full h-full object-cover">
+      <section class="relative h-[180px] lg:h-[260px] overflow-hidden">
+        <img src="images/Home-interior-banner.png" alt="Beautiful home interior" class="banner-image active absolute inset-0 w-full h-full object-cover">
+        <img src="images/Home-exterior-banner.png" alt="Beautiful home exterior" class="banner-image absolute inset-0 w-full h-full object-cover">
       </section>
 
       <!-- Insights + CTA Tiles Section -->
@@ -286,7 +287,7 @@
                   <p class="text-2xl font-bold text-primary">$499,900</p>
                   <p class="text-gray-700 font-medium mt-1">3880 N Big Spring Dr SW, Grandville, MI</p>
                   <p class="text-gray-500 text-sm mt-1">4 bed • 3 bath • 2,400 sqft</p>
-                  <p class="text-gray-400 text-xs italic mt-2">Listed by Kevin Garcia, New World Properties</p>
+                  <p class="text-gray-400 text-xs italic mt-2">Listed by Michelle Gordon, Five Star Real Estate</p>
                   <a href="mailto:kevin@grar.com?subject=I'd%20Like%20to%20See%203880%20N%20Big%20Spring%20Dr%20SW" class="block w-full bg-primary hover:bg-accent text-white font-bold py-3 rounded-lg text-center mt-4 transition">
                     Let's Go Look!
                   </a>
@@ -330,10 +331,10 @@
         </div>
       </section>
 
-      <!-- Recently Sold -->
+      <!-- My Sold Homes -->
       <section id="recently-sold" class="py-12 px-6 md:px-12 bg-gray-50">
         <div class="max-w-6xl mx-auto">
-          <h2 class="text-2xl font-bold text-primary mb-8 text-center">Recently Sold</h2>
+          <h2 class="text-2xl font-bold text-primary mb-8 text-center">My Sold Homes</h2>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="bg-white rounded-lg shadow-md overflow-hidden">
               <img src="images/Raven-Avenue.png" alt="3361 Raven Ave SW" class="w-full h-48 object-cover">
@@ -438,6 +439,20 @@
       }
 
       requestAnimationFrame(animation);
+    }
+
+    // Banner carousel - rotate every 4 seconds
+    const bannerImages = document.querySelectorAll('.banner-image');
+    let currentBanner = 0;
+
+    function rotateBanner() {
+      bannerImages[currentBanner].classList.remove('active');
+      currentBanner = (currentBanner + 1) % bannerImages.length;
+      bannerImages[currentBanner].classList.add('active');
+    }
+
+    if (bannerImages.length > 1) {
+      setInterval(rotateBanner, 4000);
     }
   </script>
 </body>
