@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Primary Meta Tags -->
+  <title>Kevin J. Garcia | New World Properties | Grand Rapids Area Real Estate</title>
+  <meta name="title" content="Kevin J. Garcia | New World Properties | Grand Rapids Area Real Estate">
+  <meta name="description" content="Kevin J. Garcia, Broker/Owner at New World Properties, LLC - Helping buyers, sellers & investors in Grand Rapids, Grandville and surrounding areas. Your Journey, Our Mission.">
+  <meta name="author" content="Kevin J. Garcia">
+  <meta name="robots" content="index, follow">
+
+  <!-- Geographic Tags for Local SEO -->
+  <meta name="geo.region" content="US-MI">
+  <meta name="geo.placename" content="Grandville, Michigan">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Kevin J. Garcia | New World Properties | Grand Rapids Area Real Estate">
+  <meta property="og:description" content="Kevin J. Garcia, Broker/Owner - Your Journey, Our Mission. Serving Grand Rapids, Grandville and surrounding areas.">
+  <meta property="og:locale" content="en_US">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="Kevin J. Garcia | New World Properties | Grand Rapids Area Real Estate">
+  <meta property="twitter:description" content="Kevin J. Garcia, Broker/Owner - Your Journey, Our Mission. Serving Grand Rapids and surrounding areas.">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#a31621',
+            accent: '#8b1219',
+            gold: '#c9a227',
+            'gold-dark': '#b8922a',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .sidebar-gradient {
+      background: linear-gradient(180deg, #d4af37 0%, #c9a227 100%);
+    }
+    .banner-image {
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+    .banner-image.active {
+      opacity: 1;
+    }
+    /* Cascade animation for tiles */
+    @keyframes cascadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .cascade-tile {
+      opacity: 0;
+      animation: cascadeIn 0.5s ease-out forwards;
+    }
+    .cascade-tile:nth-child(1) { animation-delay: 0.1s; }
+    .cascade-tile:nth-child(2) { animation-delay: 0.2s; }
+    .cascade-tile:nth-child(3) { animation-delay: 0.3s; }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <div class="flex flex-col lg:flex-row min-h-screen">
+
+    <!-- Left Sidebar -->
+    <aside class="sidebar-gradient lg:w-80 lg:flex-shrink-0">
+      <!-- Mobile: Compact header only -->
+      <div class="lg:hidden p-4">
+        <div class="flex items-center gap-3">
+          <!-- Hamburger menu button -->
+          <button onclick="toggleMobileMenu()" class="text-primary p-1">
+            <i id="menu-icon" class="fas fa-bars text-xl"></i>
+          </button>
+          <div class="flex-1">
+            <h1 class="text-lg font-bold text-primary">Kevin J. Garcia</h1>
+            <p class="text-primary/80 text-xs">Broker/Owner | New World Properties</p>
+          </div>
+        </div>
+        <!-- Mobile menu dropdown -->
+        <div id="mobile-menu" class="hidden mt-3 pt-3 border-t border-primary/20">
+          <nav class="space-y-1">
+            <a href="#insights" onclick="closeMobileMenu()" class="flex items-center py-2 px-3 text-primary/90 hover:bg-primary/10 rounded text-sm">
+              <i class="fas fa-lightbulb mr-2 w-5 text-center text-xs"></i>Market Insights
+            </a>
+            <a href="mailto:kevin@grar.com?subject=Getting%20In%20Touch" class="flex items-center py-2 px-3 text-primary/90 hover:bg-primary/10 rounded text-sm">
+              <i class="fas fa-paper-plane mr-2 w-5 text-center text-xs"></i>Get in Touch
+            </a>
+            <a href="#listings" onclick="closeMobileMenu()" class="flex items-center py-2 px-3 text-primary/90 hover:bg-primary/10 rounded text-sm">
+              <i class="fas fa-house-chimney mr-2 w-5 text-center text-xs"></i>Search for Homes / MLS
+            </a>
+            <a href="#testimonials" onclick="closeMobileMenu()" class="flex items-center py-2 px-3 text-primary/90 hover:bg-primary/10 rounded text-sm">
+              <i class="fas fa-comments mr-2 w-5 text-center text-xs"></i>Testimonials
+            </a>
+            <a href="#recently-sold" onclick="closeMobileMenu()" class="flex items-center py-2 px-3 text-primary/90 hover:bg-primary/10 rounded text-sm">
+              <i class="fas fa-handshake mr-2 w-5 text-center text-xs"></i>Recently Sold
+            </a>
+            <a href="mailto:kevin@grar.com?subject=Open%20House%20Registration" class="flex items-center py-2 px-3 text-primary/90 hover:bg-primary/10 rounded text-sm">
+              <i class="fas fa-door-open mr-2 w-5 text-center text-xs"></i>Open House Registration
+            </a>
+            <div class="pt-2 mt-2 border-t border-primary/20">
+              <a href="tel:+16168903688" class="block py-2 px-3 text-primary/90 hover:bg-primary/10 rounded text-sm">
+                <i class="fas fa-phone mr-2 text-xs"></i>(616) 890-3688
+              </a>
+              <a href="mailto:kevin@grar.com" class="block py-2 px-3 text-primary/90 hover:bg-primary/10 rounded text-sm">
+                <i class="fas fa-envelope mr-2 text-xs"></i>kevin@grar.com
+              </a>
+              <div class="flex gap-4 mt-3 px-3">
+                <a href="https://www.linkedin.com/in/kevin-garcia-broker/" target="_blank" class="text-primary text-xl hover:text-accent">
+                  <i class="fab fa-linkedin"></i>
+                </a>
+                <a href="https://www.facebook.com/YourJourneyOurMission" target="_blank" class="text-primary text-xl hover:text-accent">
+                  <i class="fab fa-facebook"></i>
+                </a>
+                <span class="text-primary/40 text-xl cursor-not-allowed" title="Coming soon">
+                  <i class="fab fa-instagram"></i>
+                </span>
+              </div>
+            </div>
+          </nav>
+        </div>
+      </div>
+
+      <!-- Desktop: Full sidebar -->
+      <div class="hidden lg:block p-6 text-center">
+        <!-- Logo -->
+        <img src="images/Logo-2.png" alt="New World Properties" class="w-56 mx-auto mb-4 rounded">
+        <!-- Headshot -->
+        <img src="images/Headshot.jpg" alt="Kevin J. Garcia" class="w-40 h-40 rounded-lg mx-auto mb-4 object-cover border-4 border-white">
+
+        <h1 class="text-2xl font-bold text-primary">Kevin J. Garcia</h1>
+        <p class="text-primary font-medium">Broker/Owner</p>
+        <p class="text-primary/90 text-sm mt-1">New World Properties, LLC</p>
+        <p class="text-primary/80 text-xs mt-2 italic">"Your Journey, Our Mission."</p>
+
+        <!-- Bio -->
+        <div class="mt-6 text-left text-sm text-primary/90 leading-relaxed">
+          <p class="mb-3">
+            Your trusted West Michigan real estate professional, helping buyers, sellers, and investors achieve their real estate goals.
+          </p>
+          <p>
+            Whether you're buying your first home, selling to move up, or looking to invest, I bring dedication and personal attention to every transaction.
+          </p>
+        </div>
+
+        <!-- Contact -->
+        <div class="mt-6 pt-6 border-t border-primary/20">
+          <h3 class="text-sm font-semibold text-primary mb-3">Contact</h3>
+          <p class="text-sm text-primary">
+            <a href="tel:+16168903688">(616) 890-3688</a>
+          </p>
+          <p class="text-sm text-primary mt-1">
+            <a href="mailto:kevin@grar.com?subject=Getting%20In%20Touch">kevin@grar.com</a>
+          </p>
+          <p class="text-xs text-primary/70 mt-2">
+            4487 Penny Lane SW<br>Grandville, MI 49418
+          </p>
+          <p class="text-xs text-primary mt-2">
+            <a href="https://www.exploreGR.com" target="_blank" class="hover:underline">www.exploreGR.com</a>
+          </p>
+          <div class="flex gap-4 mt-6 justify-center">
+            <a href="https://www.linkedin.com/in/kevin-garcia-broker/" target="_blank" class="text-primary text-2xl hover:text-accent">
+              <i class="fab fa-linkedin"></i>
+            </a>
+            <a href="https://www.facebook.com/YourJourneyOurMission" target="_blank" class="text-primary text-2xl hover:text-accent">
+              <i class="fab fa-facebook"></i>
+            </a>
+            <span class="text-primary/40 text-2xl cursor-not-allowed relative group" title="Coming soon">
+              <i class="fab fa-instagram"></i>
+              <span class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black/80 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap">Coming soon</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="mt-6 pt-6 border-t border-primary/20 space-y-3">
+          <a href="mailto:kevin@grar.com?subject=Getting%20In%20Touch" class="flex items-center w-full bg-primary hover:bg-accent text-white font-semibold py-3 px-6 rounded-lg transition">
+            <i class="fas fa-paper-plane mr-3 w-5 text-center"></i>Get in Touch
+          </a>
+          <a href="#listings" onclick="smoothScroll(event, 'listings')" class="flex items-center w-full bg-primary hover:bg-accent text-white font-semibold py-3 px-6 rounded-lg transition">
+            <i class="fas fa-house-chimney mr-3 w-5 text-center"></i>Search for Homes / MLS
+          </a>
+          <a href="#testimonials" onclick="smoothScroll(event, 'testimonials')" class="flex items-center w-full bg-primary hover:bg-accent text-white font-semibold py-3 px-6 rounded-lg transition">
+            <i class="fas fa-comments mr-3 w-5 text-center"></i>Testimonials
+          </a>
+          <a href="#recently-sold" onclick="smoothScroll(event, 'recently-sold')" class="flex items-center w-full bg-primary hover:bg-accent text-white font-semibold py-3 px-6 rounded-lg transition">
+            <i class="fas fa-handshake mr-3 w-5 text-center"></i>Recently Sold
+          </a>
+          <a href="mailto:kevin@grar.com?subject=Open%20House%20Registration" class="flex items-center w-full bg-primary hover:bg-accent text-white font-semibold py-3 px-6 rounded-lg transition">
+            <i class="fas fa-door-open mr-3 w-5 text-center"></i>Open House Registration
+          </a>
+        </div>
+
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1">
+
+      <!-- Hero Banner -->
+      <section class="relative h-[200px] lg:h-[280px] bg-gray-200 overflow-hidden">
+        <img src="images/Real-estate-interior.jpg" alt="Beautiful home interior" class="w-full h-full object-cover">
+      </section>
+
+      <!-- Insights + CTA Tiles Section -->
+      <section class="pt-6 pb-8 lg:pt-8 lg:pb-12 px-4 md:px-12">
+        <div class="flex flex-col lg:flex-row gap-8 max-w-6xl mx-auto">
+
+          <!-- Left: Insights Card -->
+          <div class="lg:w-3/5">
+            <h2 id="insights" class="text-xl lg:text-2xl font-bold text-primary mb-4 lg:mb-6 text-center">Market Insights</h2>
+            <div class="bg-white rounded-lg shadow-lg p-6">
+              <article>
+                <p class="text-xs text-gray-400 mb-2">February 10, 2026</p>
+                <h3 class="text-lg lg:text-xl font-bold text-primary mb-4">Zillow Is Lying to You (and It's Not Even Sorry)</h3>
+                <div class="text-gray-700 text-sm lg:text-base leading-relaxed space-y-4">
+                  <p>If Zillow were a person, it would be the friend who confidently gives directions and somehow sends you into a lake.</p>
+                  <p>Don't get me wrong, Zillow is useful. I check it. You check it. Your cousin who "almost became a realtor" checks it. But treating a Zestimate like gospel is where things go sideways.</p>
+                  <p>Here's the thing. Zillow doesn't see your house. It doesn't smell the fresh paint. It doesn't know you replaced the roof last year or that your neighbor collects rusty lawn sculptures. It doesn't feel the awkward layout, the surprisingly perfect natural light, or the fact that your basement ceiling is doing its best.</p>
+                  <p>Zestimates are based on algorithms, not emotions, and real estate is deeply emotional. Algorithms don't understand that buyers will pay more for a home that feels right, or less for one that reminds them of their aunt's house in 1997.</p>
+                  <p>I've seen Zestimates miss the mark by tens of thousands of dollars, both high and low. Overpricing because of an inflated Zestimate can cause a listing to sit, and nothing scares buyers like a house that's been lingering too long. Underpricing leaves money on the table, which hurts even more.</p>
+                  <p>Think of Zillow like a weather app. Helpful for a general forecast, but you still look outside before deciding what to wear.</p>
+                  <p>If you want a real value, you need a real person. Someone who knows your market, your street, your buyer pool, and how homes are actually performing, not how an algorithm guesses they might.</p>
+                  <p class="font-semibold text-primary">Zillow isn't evil. It's just not your agent.</p>
+                </div>
+              </article>
+            </div>
+          </div>
+
+          <!-- Right: CTA Tiles Stacked (3 tiles: Sell, Buy, Invest) -->
+          <div id="how-can-i-help" class="lg:w-2/5">
+            <h2 class="text-xl lg:text-2xl font-bold text-primary mb-4 lg:mb-6 text-center">How can I help?</h2>
+            <div class="flex flex-col gap-3 lg:gap-4">
+              <!-- Want to Sell -->
+              <a href="mailto:kevin@grar.com?subject=I'm%20Thinking%20About%20Selling" class="cascade-tile bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition group cursor-pointer block">
+                <div class="flex">
+                  <img src="images/RE-sold-sign.jpg" alt="Want to Sell" class="w-36 h-28 lg:w-48 lg:h-36 object-cover group-hover:scale-105 transition duration-300">
+                  <div class="p-3 lg:p-4 flex-1 flex items-center justify-center">
+                    <h3 class="text-lg lg:text-xl font-bold text-primary">Want to Sell?</h3>
+                  </div>
+                </div>
+              </a>
+
+              <!-- Want to Buy -->
+              <a href="mailto:kevin@grar.com?subject=I'm%20Interested%20In%20Buying" class="cascade-tile bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition group cursor-pointer block">
+                <div class="flex">
+                  <img src="images/Home-closing.jpg" alt="Want to Buy" class="w-36 h-28 lg:w-48 lg:h-36 object-cover group-hover:scale-105 transition duration-300">
+                  <div class="p-3 lg:p-4 flex-1 flex items-center justify-center">
+                    <h3 class="text-lg lg:text-xl font-bold text-primary">Want to Buy?</h3>
+                  </div>
+                </div>
+              </a>
+
+              <!-- Want to Invest -->
+              <a href="mailto:kevin@grar.com?subject=Investment%20Property%20Inquiry" class="cascade-tile bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition group cursor-pointer block">
+                <div class="flex">
+                  <img src="images/Investment-home.jpg" alt="Want to Invest" class="w-36 h-28 lg:w-48 lg:h-36 object-cover group-hover:scale-105 transition duration-300">
+                  <div class="p-3 lg:p-4 flex-1 flex items-center justify-center">
+                    <h3 class="text-lg lg:text-xl font-bold text-primary">Want to Invest?</h3>
+                  </div>
+                </div>
+              </a>
+            </div>
+
+            <!-- Featured Listing -->
+            <div class="mt-6">
+              <h3 class="text-lg lg:text-xl font-bold text-primary mb-3 text-center">Featured Listing</h3>
+              <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                <a href="https://www.flexmls.com/share/DR2AL/3880-N-Big-Spring-Drive-SW-Grandville-MI-49418" target="_blank" class="block group">
+                  <img src="https://cdn.resize.sparkplatform.com/ric/1600x1200/true/20260204232040814493000000-o.jpg" alt="3880 N Big Spring Drive SW, Grandville, MI" class="w-full h-48 object-cover group-hover:scale-105 transition duration-300">
+                </a>
+                <div class="p-4">
+                  <p class="text-2xl font-bold text-primary">$499,900</p>
+                  <p class="text-gray-700 font-medium mt-1">3880 N Big Spring Dr SW, Grandville, MI</p>
+                  <p class="text-gray-500 text-sm mt-1">4 bed • 3 bath • 2,400 sqft</p>
+                  <p class="text-gray-400 text-xs italic mt-2">Listed by Kevin Garcia, New World Properties</p>
+                  <a href="mailto:kevin@grar.com?subject=I'd%20Like%20to%20See%203880%20N%20Big%20Spring%20Dr%20SW" class="block w-full bg-primary hover:bg-accent text-white font-bold py-3 rounded-lg text-center mt-4 transition">
+                    Let's Go Look!
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Testimonials -->
+      <section id="testimonials" class="py-6 lg:py-12 px-6 md:px-12 bg-white">
+        <h2 class="text-xl lg:text-2xl font-bold text-primary mb-4 text-center">What My Clients Are Saying</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          <div class="bg-gray-50 rounded-lg p-6">
+            <i class="fas fa-quote-left text-2xl text-primary/30 mb-3"></i>
+            <p class="text-gray-700 italic text-sm lg:text-base mb-4">"Kevin has gone above and beyond in the selling of our home. He is also helping us buy our next home and has proven knowledgeable, reasonable and a perfect advocate for what is in our best interest. I would recommend Kevin 101%!"</p>
+          </div>
+          <div class="bg-gray-50 rounded-lg p-6">
+            <i class="fas fa-quote-left text-2xl text-primary/30 mb-3"></i>
+            <p class="text-gray-700 italic text-sm lg:text-base mb-4">"Kevin proved to be a real asset in helping me to purchase the right property at the right time and at the right price! His understanding of the real estate market and the purchase process helped make our transaction as easy as it was fun! In fact, Kevin is helping me with another property as of this writing! Thanks Kevin!"</p>
+          </div>
+          <div class="bg-gray-50 rounded-lg p-6">
+            <i class="fas fa-quote-left text-2xl text-primary/30 mb-3"></i>
+            <p class="text-gray-700 italic text-sm lg:text-base mb-4">"Kevin's knowledge of market conditions and pricing made our home sale quick and we got offers higher than asking. I wouldn't use any other agent. It had been some time since we had purchased or sold a home and he made it so easy. Kevin is a pleasure to work with."</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Search for Homes -->
+      <section id="listings" class="py-12 px-6 md:px-12 bg-gray-100">
+        <div class="max-w-6xl mx-auto">
+          <h2 class="text-2xl font-bold text-primary mb-8 text-center">Search for Homes</h2>
+          <a href="http://www.michric.org/residential/" target="_blank" class="block bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition max-w-md mx-auto">
+            <img src="images/Michric-search.png" alt="Search MichRIC" class="w-full">
+            <div class="p-4 text-center">
+              <p class="text-primary font-semibold">Search MLS Listings</p>
+              <p class="text-gray-500 text-sm mt-1">Click to browse available homes</p>
+            </div>
+          </a>
+        </div>
+      </section>
+
+      <!-- Recently Sold -->
+      <section id="recently-sold" class="py-12 px-6 md:px-12 bg-gray-50">
+        <div class="max-w-6xl mx-auto">
+          <h2 class="text-2xl font-bold text-primary mb-8 text-center">Recently Sold</h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+              <img src="images/Raven-Avenue.png" alt="3361 Raven Ave SW" class="w-full h-48 object-cover">
+              <div class="p-4">
+                <p class="text-gray-600 text-sm">3361 Raven Ave SW</p>
+                <p class="text-gray-500 text-xs">Wyoming, Michigan</p>
+                <p class="text-lg font-bold text-primary mt-2">$99,900</p>
+              </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+              <img src="images/Sharon-Avenue.png" alt="3418 Sharon Ave" class="w-full h-48 object-cover">
+              <div class="p-4">
+                <p class="text-gray-600 text-sm">3418 Sharon Ave</p>
+                <p class="text-gray-500 text-xs">Wyoming, Michigan</p>
+                <p class="text-lg font-bold text-primary mt-2">$305,000</p>
+              </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+              <img src="images/Penny-Lane.png" alt="4418 Penny Lane" class="w-full h-48 object-cover">
+              <div class="p-4">
+                <p class="text-gray-600 text-sm">4418 Penny Lane</p>
+                <p class="text-gray-500 text-xs">Wyoming, Michigan</p>
+                <p class="text-lg font-bold text-primary mt-2">$355,000</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Contact Section -->
+      <section id="contact" class="py-12 px-6 md:px-12 bg-primary text-white">
+        <div class="max-w-2xl mx-auto text-center">
+          <h2 class="text-2xl font-bold mb-4">Ready to Get Started?</h2>
+          <p class="text-red-100 mb-8">Whether you're buying, selling, or just have questions, I'm here to help.</p>
+          <a href="mailto:kevin@grar.com?subject=Let's%20Talk%20Real%20Estate" class="inline-block bg-white hover:bg-gray-100 text-primary font-bold py-3 px-8 rounded-lg transition">
+            Contact Me
+          </a>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="bg-gray-900 text-gray-400 py-8 px-6">
+        <div class="max-w-6xl mx-auto text-center text-sm">
+          <p class="font-semibold text-gray-300">Kevin J. Garcia | New World Properties, LLC</p>
+          <p class="mt-2">4487 Penny Lane SW, Grandville, MI 49418</p>
+          <p class="mt-1">
+            <a href="tel:+16168903688" class="hover:text-white">(616) 890-3688</a> |
+            <a href="mailto:kevin@grar.com" class="hover:text-white">kevin@grar.com</a>
+          </p>
+          <p class="mt-2">Licensed Broker in the State of Michigan</p>
+          <p class="mt-3 text-xs text-gray-500">&copy; 2026 New World Properties, LLC. All rights reserved.</p>
+        </div>
+      </footer>
+
+    </main>
+  </div>
+
+  <script>
+    // Mobile menu toggle
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      const icon = document.getElementById('menu-icon');
+
+      if (menu.classList.contains('hidden')) {
+        menu.classList.remove('hidden');
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-times');
+      } else {
+        menu.classList.add('hidden');
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+      }
+    }
+
+    function closeMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      const icon = document.getElementById('menu-icon');
+      menu.classList.add('hidden');
+      icon.classList.remove('fa-times');
+      icon.classList.add('fa-bars');
+    }
+
+    // Smooth scroll with custom duration
+    function smoothScroll(e, targetId) {
+      e.preventDefault();
+      const target = document.getElementById(targetId);
+      if (!target) return;
+
+      const startPosition = window.pageYOffset;
+      const targetPosition = target.getBoundingClientRect().top + startPosition;
+      const distance = targetPosition - startPosition;
+      const duration = 1200;
+      let startTime = null;
+
+      function animation(currentTime) {
+        if (startTime === null) startTime = currentTime;
+        const timeElapsed = currentTime - startTime;
+        const progress = Math.min(timeElapsed / duration, 1);
+        const ease = 1 - Math.pow(1 - progress, 3);
+        window.scrollTo(0, startPosition + distance * ease);
+        if (timeElapsed < duration) requestAnimationFrame(animation);
+      }
+
+      requestAnimationFrame(animation);
+    }
+  </script>
+</body>
+</html>
