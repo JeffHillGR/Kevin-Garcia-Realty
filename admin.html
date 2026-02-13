@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Kevin J. Garcia | New World Properties</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+  <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#a31621',
+            accent: '#8b1219',
+            gold: '#c9a227',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .ql-editor {
+      min-height: 300px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .ql-editor p {
+      margin-bottom: 0.75rem;
+    }
+    /* Make images in editor resizable and floatable */
+    .ql-editor img {
+      max-width: 100%;
+      cursor: pointer;
+      margin: 8px 0;
+    }
+    .ql-editor img.float-left {
+      float: left;
+      margin: 0 16px 8px 0;
+      max-width: 50%;
+    }
+    .ql-editor img.float-right {
+      float: right;
+      margin: 0 0 8px 16px;
+      max-width: 50%;
+    }
+    .ql-editor img.small {
+      max-width: 200px;
+    }
+    .ql-editor img.medium {
+      max-width: 350px;
+    }
+    /* Image options menu */
+    #img-menu {
+      position: absolute;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      padding: 8px;
+      z-index: 1000;
+      display: none;
+    }
+    #img-menu.show { display: block; }
+    #img-menu .menu-section {
+      margin-bottom: 8px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #eee;
+    }
+    #img-menu .menu-section:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+    #img-menu .menu-label {
+      font-size: 11px;
+      color: #666;
+      margin-bottom: 4px;
+    }
+    #img-menu button {
+      padding: 6px 12px;
+      margin: 2px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background: #f5f5f5;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    #img-menu button:hover { background: #e0e0e0; }
+    #img-menu button.active {
+      background: #a31621;
+      color: white;
+      border-color: #8b1219;
+    }
+    /* Ensure Quill link tooltip is visible */
+    .ql-tooltip {
+      z-index: 1001 !important;
+      background: white !important;
+      border: 1px solid #ccc !important;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+      padding: 8px 12px !important;
+      border-radius: 4px !important;
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+    }
+    .ql-tooltip.ql-editing {
+      left: 50% !important;
+      transform: translateX(-50%) !important;
+    }
+    .ql-tooltip input[type="text"] {
+      width: 200px !important;
+      padding: 4px 8px !important;
+      border: 1px solid #ccc !important;
+      border-radius: 4px !important;
+    }
+    .ql-tooltip a.ql-action,
+    .ql-tooltip a.ql-remove {
+      margin-left: 8px !important;
+    }
+    /* Override hidden state when editing */
+    .ql-tooltip.ql-editing.ql-hidden {
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+    .ql-container {
+      position: relative;
+    }
+    /* Resizable editor */
+    #editor {
+      border: 1px solid #ccc;
+      border-radius: 0 0 4px 4px;
+      min-height: 200px;
+      max-height: 600px;
+      overflow-y: auto;
+      resize: vertical;
+    }
+    #editor .ql-editor {
+      min-height: 180px;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+  <!-- Image Options Menu -->
+  <div id="img-menu">
+    <div class="menu-section">
+      <div class="menu-label">Size</div>
+      <button data-size="small">Small</button>
+      <button data-size="medium">Medium</button>
+      <button data-size="large">Large</button>
+    </div>
+    <div class="menu-section">
+      <div class="menu-label">Text Wrap</div>
+      <button data-float="left">← Left</button>
+      <button data-float="none">None</button>
+      <button data-float="right">Right →</button>
+    </div>
+  </div>
+
+  <!-- Login Screen -->
+  <div id="login-screen" class="min-h-screen flex items-center justify-center">
+    <div class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full mx-4">
+      <h1 class="text-2xl font-bold text-primary mb-6 text-center">Admin Login</h1>
+      <form onsubmit="checkPassword(event)">
+        <div class="relative mb-4">
+          <input type="password" id="password-input" placeholder="Enter password"
+            class="w-full border border-gray-300 rounded-lg px-4 py-3 pr-12 focus:ring-2 focus:ring-primary focus:border-transparent">
+          <button type="button" onclick="togglePasswordVisibility()"
+            class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700">
+            <svg id="eye-icon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+            <svg id="eye-off-icon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+            </svg>
+          </button>
+        </div>
+        <button type="submit" class="w-full bg-primary hover:bg-accent text-white font-bold py-3 px-6 rounded-lg transition">
+          Login
+        </button>
+        <p id="login-error" class="text-red-500 text-sm mt-3 text-center hidden">Incorrect password</p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Admin Dashboard -->
+  <div id="admin-dashboard" class="hidden">
+    <header class="bg-primary text-white py-4 px-6 shadow-md">
+      <div class="max-w-6xl mx-auto flex justify-between items-center">
+        <h1 class="text-xl font-bold">Site Admin</h1>
+        <div class="flex gap-4">
+          <a href="index.html" class="text-white/80 hover:text-white text-sm">View Site</a>
+          <button onclick="logout()" class="text-white/80 hover:text-white text-sm">Logout</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto py-8 px-6">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+        <!-- Post Editor -->
+        <div class="lg:col-span-2">
+          <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-4" id="editor-title">New Market Insight</h2>
+
+            <input type="hidden" id="edit-post-id" value="">
+
+            <div class="space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Title *</label>
+                <input type="text" id="post-title" placeholder="Enter post title"
+                  class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary focus:border-transparent">
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Author</label>
+                <input type="text" id="post-author" placeholder="Kevin J. Garcia"
+                  class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary focus:border-transparent">
+              </div>
+
+              <input type="hidden" id="post-image" value="">
+
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Content *</label>
+                <div id="editor" class="bg-white"></div>
+                <p id="char-count" class="text-xs text-gray-500 mt-2 text-right">0 characters</p>
+              </div>
+
+              <div class="flex gap-3 pt-4">
+                <button onclick="savePost()" class="bg-primary hover:bg-accent text-white font-bold py-2 px-6 rounded-lg transition">
+                  Save Post
+                </button>
+                <button onclick="clearEditor()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-6 rounded-lg transition">
+                  Clear
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Posts List -->
+        <div>
+          <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Market Insights</h2>
+            <div id="posts-list" class="space-y-3">
+              <!-- Posts will be listed here -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Featured Listing Section -->
+      <div class="mt-8">
+        <div class="bg-white rounded-lg shadow-lg p-6">
+          <h2 class="text-xl font-bold text-gray-800 mb-4">Featured Listing</h2>
+          <p class="text-sm text-gray-500 mb-4">This listing will appear on the homepage below the CTA tiles.</p>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Photo URL *</label>
+              <input type="text" id="listing-photo" placeholder="https://example.com/photo.jpg"
+                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary focus:border-transparent">
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Address *</label>
+              <input type="text" id="listing-address" placeholder="123 Main St, Grandville, MI"
+                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary focus:border-transparent">
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Price *</label>
+              <input type="text" id="listing-price" placeholder="$450,000"
+                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary focus:border-transparent">
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Listed By *</label>
+              <input type="text" id="listing-agent" placeholder="Kevin J. Garcia, New World Properties"
+                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary focus:border-transparent">
+            </div>
+
+            <div class="grid grid-cols-3 gap-2">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Beds</label>
+                <input type="text" id="listing-beds" placeholder="4"
+                  class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary focus:border-transparent">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Baths</label>
+                <input type="text" id="listing-baths" placeholder="3"
+                  class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary focus:border-transparent">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Sqft</label>
+                <input type="text" id="listing-sqft" placeholder="2,400"
+                  class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary focus:border-transparent">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">MLS Link</label>
+              <input type="text" id="listing-mls" placeholder="https://flexmls.com/share/..."
+                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary focus:border-transparent">
+            </div>
+          </div>
+
+          <div class="flex gap-3 mt-6">
+            <button onclick="saveFeaturedListing()" class="bg-primary hover:bg-accent text-white font-bold py-2 px-6 rounded-lg transition">
+              Save Featured Listing
+            </button>
+            <button onclick="clearFeaturedListing()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-6 rounded-lg transition">
+              Clear
+            </button>
+            <button onclick="removeFeaturedListing()" class="bg-red-100 hover:bg-red-200 text-red-700 font-bold py-2 px-6 rounded-lg transition">
+              Remove from Site
+            </button>
+          </div>
+
+          <div id="listing-status" class="mt-4 text-sm hidden"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const ADMIN_PASSWORD = 'Kevin2026';
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz9g7BFlNMQnt3Jas-94ZiG0iHvaXAmyaDkr6GWJWlZT6O4Y6CnXjQebEAcF-hD2sv2/exec';
+    const BLOG_TYPE = 'kevin_blog';
+    const LISTING_TYPE = 'kevin_listing';
+
+    let quill;
+    let postsCache = [];
+
+    // Check if already logged in
+    if (localStorage.getItem('kevinAdminLoggedIn') === 'true') {
+      showDashboard();
+    }
+
+    function togglePasswordVisibility() {
+      const input = document.getElementById('password-input');
+      const eyeIcon = document.getElementById('eye-icon');
+      const eyeOffIcon = document.getElementById('eye-off-icon');
+
+      if (input.type === 'password') {
+        input.type = 'text';
+        eyeIcon.classList.add('hidden');
+        eyeOffIcon.classList.remove('hidden');
+      } else {
+        input.type = 'password';
+        eyeIcon.classList.remove('hidden');
+        eyeOffIcon.classList.add('hidden');
+      }
+    }
+
+    function checkPassword(e) {
+      e.preventDefault();
+      const input = document.getElementById('password-input').value;
+      if (input === ADMIN_PASSWORD) {
+        localStorage.setItem('kevinAdminLoggedIn', 'true');
+        showDashboard();
+      } else {
+        document.getElementById('login-error').classList.remove('hidden');
+      }
+    }
+
+    function showDashboard() {
+      document.getElementById('login-screen').classList.add('hidden');
+      document.getElementById('admin-dashboard').classList.remove('hidden');
+      initEditor();
+      loadPosts();
+      loadFeaturedListing();
+    }
+
+    function logout() {
+      localStorage.removeItem('kevinAdminLoggedIn');
+      location.reload();
+    }
+
+    function initEditor() {
+      quill = new Quill('#editor', {
+        theme: 'snow',
+        modules: {
+          toolbar: [
+            [{ 'header': [1, 2, 3, false] }],
+            ['bold', 'italic', 'underline'],
+            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+            ['link', 'image'],
+            ['clean']
+          ]
+        },
+        placeholder: 'Write your market insight here...'
+      });
+
+      // Character count with soft limit
+      var CHAR_LIMIT = 3000;
+      function updateCharCount() {
+        var text = quill.getText().trim();
+        var count = text.length;
+        var el = document.getElementById('char-count');
+        el.textContent = count.toLocaleString() + ' / ' + CHAR_LIMIT.toLocaleString() + ' characters';
+        if (count > CHAR_LIMIT) {
+          el.className = 'text-xs text-red-500 mt-2 text-right font-semibold';
+        } else if (count > CHAR_LIMIT * 0.9) {
+          el.className = 'text-xs text-orange-500 mt-2 text-right';
+        } else {
+          el.className = 'text-xs text-gray-500 mt-2 text-right';
+        }
+      }
+      quill.on('text-change', updateCharCount);
+      updateCharCount();
+
+      // Override image button to prompt for URL instead of file upload
+      var toolbar = quill.getModule('toolbar');
+      toolbar.addHandler('image', function() {
+        var url = prompt('Enter image URL:');
+        if (url) {
+          var range = quill.getSelection();
+          quill.insertEmbed(range ? range.index : 0, 'image', url);
+        }
+      });
+
+      // Override link button to use prompt dialog
+      toolbar.addHandler('link', function() {
+        var range = quill.getSelection();
+        if (!range || range.length === 0) {
+          alert('Please select some text first to create a link.');
+          return;
+        }
+        var url = prompt('Enter link URL:');
+        if (url) {
+          quill.format('link', url);
+        }
+      });
+
+      // Image menu handling
+      var imgMenu = document.getElementById('img-menu');
+      var selectedImg = null;
+
+      // Show menu on image click
+      quill.root.addEventListener('click', function(e) {
+        if (e.target.tagName === 'IMG') {
+          e.preventDefault();
+          selectedImg = e.target;
+
+          // Position menu near the image
+          var rect = e.target.getBoundingClientRect();
+          imgMenu.style.top = (rect.bottom + window.scrollY + 5) + 'px';
+          imgMenu.style.left = (rect.left + window.scrollX) + 'px';
+          imgMenu.classList.add('show');
+
+          // Update active buttons
+          updateMenuButtons();
+        }
+      });
+
+      // Hide menu when clicking elsewhere
+      document.addEventListener('click', function(e) {
+        if (!imgMenu.contains(e.target) && e.target.tagName !== 'IMG') {
+          imgMenu.classList.remove('show');
+          selectedImg = null;
+        }
+      });
+
+      // Handle menu button clicks
+      imgMenu.addEventListener('click', function(e) {
+        if (!selectedImg || e.target.tagName !== 'BUTTON') return;
+
+        var size = e.target.dataset.size;
+        var float = e.target.dataset.float;
+
+        if (size) {
+          selectedImg.classList.remove('small', 'medium');
+          if (size !== 'large') selectedImg.classList.add(size);
+        }
+
+        if (float) {
+          selectedImg.classList.remove('float-left', 'float-right');
+          if (float === 'left') selectedImg.classList.add('float-left');
+          if (float === 'right') selectedImg.classList.add('float-right');
+        }
+
+        updateMenuButtons();
+      });
+
+      function updateMenuButtons() {
+        if (!selectedImg) return;
+
+        // Update size buttons
+        imgMenu.querySelectorAll('[data-size]').forEach(function(btn) {
+          var size = btn.dataset.size;
+          var isActive = (size === 'large' && !selectedImg.classList.contains('small') && !selectedImg.classList.contains('medium'))
+            || selectedImg.classList.contains(size);
+          btn.classList.toggle('active', isActive);
+        });
+
+        // Update float buttons
+        imgMenu.querySelectorAll('[data-float]').forEach(function(btn) {
+          var float = btn.dataset.float;
+          var isActive = (float === 'none' && !selectedImg.classList.contains('float-left') && !selectedImg.classList.contains('float-right'))
+            || (float === 'left' && selectedImg.classList.contains('float-left'))
+            || (float === 'right' && selectedImg.classList.contains('float-right'));
+          btn.classList.toggle('active', isActive);
+        });
+      }
+    }
+
+    async function loadPosts() {
+      const listEl = document.getElementById('posts-list');
+      listEl.innerHTML = '<p class="text-gray-500 text-sm">Loading...</p>';
+
+      try {
+        const response = await fetch(GOOGLE_SCRIPT_URL + '?type=kevin_blog');
+        postsCache = await response.json();
+
+        if (postsCache.length === 0) {
+          listEl.innerHTML = '<p class="text-gray-500 text-sm">No posts yet</p>';
+          return;
+        }
+
+        // Extract order from content if embedded
+        postsCache.forEach(post => {
+          const orderMatch = post.content.match(/<!--ORDER:(\d+)-->/);
+          if (orderMatch) {
+            post.order = parseInt(orderMatch[1], 10);
+            post.content = post.content.replace(/<!--ORDER:\d+-->/g, '');
+          }
+        });
+
+        // Sort by order field if present, otherwise by date
+        postsCache.sort((a, b) => {
+          if (a.order !== undefined && b.order !== undefined) {
+            return a.order - b.order;
+          }
+          return new Date(b.date) - new Date(a.date);
+        });
+
+        listEl.innerHTML = postsCache.map((post, index) => `
+          <div class="border border-gray-200 rounded-lg p-3">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-xs font-bold text-primary w-6">#${index + 1}</span>
+              <h3 class="font-semibold text-gray-800 text-sm truncate flex-1">${post.title}</h3>
+            </div>
+            <p class="text-xs text-gray-500 ml-8">${new Date(post.date).toLocaleDateString()}</p>
+            <div class="flex items-center gap-3 mt-2 ml-8">
+              <button onclick="editPost('${post.id}')" class="text-xs text-primary hover:text-accent">Edit</button>
+              <button onclick="deletePost('${post.id}')" class="text-xs text-red-500 hover:text-red-700">Delete</button>
+              <span class="text-gray-300">|</span>
+              <span class="text-xs text-gray-500">Move</span>
+              <button onclick="movePost(${index}, -1)" class="text-gray-400 hover:text-primary text-sm ${index === 0 ? 'invisible' : ''}" title="Move up">↑</button>
+              <button onclick="movePost(${index}, 1)" class="text-gray-400 hover:text-primary text-sm ${index === postsCache.length - 1 ? 'invisible' : ''}" title="Move down">↓</button>
+            </div>
+          </div>
+        `).join('');
+      } catch (error) {
+        console.error('Error loading posts:', error);
+        listEl.innerHTML = '<p class="text-red-500 text-sm">Error loading posts</p>';
+      }
+    }
+
+    async function savePost() {
+      const title = document.getElementById('post-title').value.trim();
+      const author = document.getElementById('post-author').value.trim();
+      const image = document.getElementById('post-image').value.trim();
+      const content = quill.root.innerHTML;
+      const editId = document.getElementById('edit-post-id').value;
+
+      if (!title) {
+        alert('Please enter a title');
+        return;
+      }
+
+      if (quill.getText().trim().length < 10) {
+        alert('Please enter some content');
+        return;
+      }
+
+      const postData = {
+        type: BLOG_TYPE,
+        action: 'save',
+        title,
+        author,
+        image,
+        content,
+        updated: new Date().toISOString()
+      };
+
+      if (editId) {
+        postData.editId = editId;
+      } else {
+        postData.id = 'post_' + Date.now();
+        postData.date = new Date().toISOString();
+      }
+
+      try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(postData)
+        });
+
+        // Don't clear yet - wait and verify the post was saved
+        alert('Saving... Please wait while we verify.');
+
+        // Wait for Google Sheets to process, then check if it saved
+        setTimeout(async () => {
+          await loadPosts();
+          const savedPost = postsCache.find(p => p.id === postData.id || p.id === postData.editId);
+          if (savedPost) {
+            clearEditor();
+            alert('Post saved successfully!');
+          } else {
+            alert('Warning: Post may not have saved. Your content is still in the editor. Please check your Apps Script in Google Sheets.');
+          }
+        }, 2000);
+      } catch (error) {
+        console.error('Error saving post:', error);
+        alert('Error saving post. Please try again.');
+      }
+    }
+
+    function editPost(id) {
+      const post = postsCache.find(p => p.id === id);
+      if (!post) return;
+
+      document.getElementById('post-title').value = post.title;
+      document.getElementById('post-author').value = post.author || '';
+      document.getElementById('post-image').value = post.image || '';
+      quill.root.innerHTML = post.content;
+      document.getElementById('edit-post-id').value = id;
+      document.getElementById('editor-title').textContent = 'Edit Post';
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    async function deletePost(id) {
+      if (!confirm('Are you sure you want to delete this post?')) return;
+
+      try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ type: BLOG_TYPE, action: 'delete', id })
+        });
+
+        // Clear editor if we were editing this post
+        if (document.getElementById('edit-post-id').value === id) {
+          clearEditor();
+        }
+
+        // Wait a moment for Google Sheets to process
+        setTimeout(loadPosts, 1000);
+      } catch (error) {
+        console.error('Error deleting post:', error);
+        alert('Error deleting post. Please try again.');
+      }
+    }
+
+    async function movePost(index, direction) {
+      const newIndex = index + direction;
+      if (newIndex < 0 || newIndex >= postsCache.length) return;
+
+      // Swap in cache
+      const temp = postsCache[index];
+      postsCache[index] = postsCache[newIndex];
+      postsCache[newIndex] = temp;
+
+      // Assign order numbers based on position (0 = first/top)
+      postsCache.forEach((post, i) => {
+        post.order = i;
+      });
+
+      // Re-render the list immediately for responsiveness
+      const listEl = document.getElementById('posts-list');
+      listEl.innerHTML = postsCache.map((post, i) => `
+        <div class="border border-gray-200 rounded-lg p-3">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-xs font-bold text-primary w-6">#${i + 1}</span>
+            <h3 class="font-semibold text-gray-800 text-sm truncate flex-1">${post.title}</h3>
+          </div>
+          <p class="text-xs text-gray-500 ml-8">${new Date(post.date).toLocaleDateString()}</p>
+          <div class="flex items-center gap-3 mt-2 ml-8">
+            <button onclick="editPost('${post.id}')" class="text-xs text-primary hover:text-accent">Edit</button>
+            <button onclick="deletePost('${post.id}')" class="text-xs text-red-500 hover:text-red-700">Delete</button>
+            <span class="text-gray-300">|</span>
+            <span class="text-xs text-gray-500">Move</span>
+            <button onclick="movePost(${i}, -1)" class="text-gray-400 hover:text-primary text-sm ${i === 0 ? 'invisible' : ''}" title="Move up">↑</button>
+            <button onclick="movePost(${i}, 1)" class="text-gray-400 hover:text-primary text-sm ${i === postsCache.length - 1 ? 'invisible' : ''}" title="Move down">↓</button>
+          </div>
+        </div>
+      `).join('');
+
+      // Save ALL posts with their order numbers embedded in content
+      try {
+        for (const post of postsCache) {
+          // Strip any existing order marker from content
+          let cleanContent = post.content.replace(/<!--ORDER:\d+-->/g, '');
+          // Add order marker at the start of content
+          let contentWithOrder = `<!--ORDER:${post.order}-->${cleanContent}`;
+
+          await fetch(GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              type: BLOG_TYPE,
+              action: 'save',
+              editId: post.id,
+              id: post.id,
+              title: post.title,
+              image: post.image || '',
+              content: contentWithOrder,
+              date: post.date,
+              order: post.order,
+              updated: new Date().toISOString()
+            })
+          });
+        }
+        console.log('Order saved successfully');
+      } catch (error) {
+        console.error('Error saving order:', error);
+      }
+    }
+
+    function clearEditor() {
+      document.getElementById('post-title').value = '';
+      document.getElementById('post-author').value = '';
+      document.getElementById('post-image').value = '';
+      quill.root.innerHTML = '';
+      document.getElementById('edit-post-id').value = '';
+      document.getElementById('editor-title').textContent = 'New Market Insight';
+    }
+
+    // Featured Listing Functions
+    async function loadFeaturedListing() {
+      try {
+        const response = await fetch(GOOGLE_SCRIPT_URL + '?type=kevin_listing');
+        const data = await response.json();
+
+        if (data && data.photo) {
+          document.getElementById('listing-photo').value = data.photo || '';
+          document.getElementById('listing-address').value = data.address || '';
+          document.getElementById('listing-price').value = data.price || '';
+          document.getElementById('listing-agent').value = data.agent || '';
+          document.getElementById('listing-beds').value = data.beds || '';
+          document.getElementById('listing-baths').value = data.baths || '';
+          document.getElementById('listing-sqft').value = data.sqft || '';
+          document.getElementById('listing-mls').value = data.mls || '';
+
+          showListingStatus('Current listing loaded', 'text-green-600');
+        }
+      } catch (error) {
+        console.error('Error loading featured listing:', error);
+      }
+    }
+
+    async function saveFeaturedListing() {
+      const photo = document.getElementById('listing-photo').value.trim();
+      const address = document.getElementById('listing-address').value.trim();
+      const price = document.getElementById('listing-price').value.trim();
+      const agent = document.getElementById('listing-agent').value.trim();
+
+      if (!photo || !address || !price || !agent) {
+        alert('Please fill in Photo URL, Address, Price, and Listed By fields');
+        return;
+      }
+
+      const listingData = {
+        type: LISTING_TYPE,
+        action: 'save',
+        photo,
+        address,
+        price,
+        agent,
+        beds: document.getElementById('listing-beds').value.trim(),
+        baths: document.getElementById('listing-baths').value.trim(),
+        sqft: document.getElementById('listing-sqft').value.trim(),
+        mls: document.getElementById('listing-mls').value.trim(),
+        updated: new Date().toISOString()
+      };
+
+      try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(listingData)
+        });
+
+        showListingStatus('Saving...', 'text-gray-600');
+
+        setTimeout(async () => {
+          await loadFeaturedListing();
+          showListingStatus('Featured listing saved!', 'text-green-600');
+        }, 2000);
+      } catch (error) {
+        console.error('Error saving listing:', error);
+        showListingStatus('Error saving listing. Please try again.', 'text-red-600');
+      }
+    }
+
+    function clearFeaturedListing() {
+      document.getElementById('listing-photo').value = '';
+      document.getElementById('listing-address').value = '';
+      document.getElementById('listing-price').value = '';
+      document.getElementById('listing-agent').value = '';
+      document.getElementById('listing-beds').value = '';
+      document.getElementById('listing-baths').value = '';
+      document.getElementById('listing-sqft').value = '';
+      document.getElementById('listing-mls').value = '';
+      document.getElementById('listing-status').classList.add('hidden');
+    }
+
+    async function removeFeaturedListing() {
+      if (!confirm('Remove the featured listing from the homepage?')) return;
+
+      try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ type: LISTING_TYPE, action: 'delete' })
+        });
+
+        clearFeaturedListing();
+        showListingStatus('Featured listing removed from site', 'text-orange-600');
+      } catch (error) {
+        console.error('Error removing listing:', error);
+        showListingStatus('Error removing listing. Please try again.', 'text-red-600');
+      }
+    }
+
+    function showListingStatus(message, colorClass) {
+      const status = document.getElementById('listing-status');
+      status.textContent = message;
+      status.className = 'mt-4 text-sm ' + colorClass;
+      status.classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>

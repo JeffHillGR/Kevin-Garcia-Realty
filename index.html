@@ -142,7 +142,7 @@
         <!-- Logo -->
         <img src="images/New%20World%20Logo.jpeg" alt="New World Properties" class="w-56 mx-auto mb-4 rounded border-2 border-gold">
         <!-- Headshot -->
-        <img src="images/Kevin%20Headshot%202.png" alt="Kevin J. Garcia" class="w-40 h-40 rounded-lg mx-auto mb-4 object-cover border-4 border-gold">
+        <img src="images/Kevin%20Headshot%202.png" alt="Kevin J. Garcia" class="w-40 h-40 rounded-lg mx-auto mb-4 object-cover border-2 border-gold">
 
         <h1 class="text-2xl font-bold text-primary">Kevin J. Garcia</h1>
         <p class="text-primary font-medium">Broker/Owner</p>
@@ -201,7 +201,7 @@
           <a href="#recently-sold" onclick="smoothScroll(event, 'recently-sold')" class="flex items-center w-full bg-primary hover:bg-accent text-white font-semibold py-3 px-6 rounded-lg transition">
             <i class="fas fa-handshake mr-3 w-5 text-center"></i>My Sold Homes
           </a>
-          <a href="mailto:kevin@grar.com?subject=Open%20House%20Registration" class="flex items-center w-full bg-primary hover:bg-accent text-white font-semibold py-3 px-6 rounded-lg transition">
+          <a href="mailto:kevin@grar.com?subject=Open%20House%20Registration" class="flex items-center w-full bg-primary hover:bg-accent text-white font-semibold py-3 px-6 rounded-lg transition whitespace-nowrap text-sm">
             <i class="fas fa-door-open mr-3 w-5 text-center"></i>Open House Registration
           </a>
         </div>
@@ -225,7 +225,7 @@
           <!-- Left: Insights Card -->
           <div class="lg:w-3/5">
             <h2 id="insights" class="text-xl lg:text-2xl font-bold text-primary mb-4 lg:mb-6 text-center">Market Insights</h2>
-            <div class="bg-white rounded-lg shadow-lg p-6 border-2 border-gold">
+            <div class="bg-white rounded-lg shadow-lg p-6 border-2 border-gray-800">
               <article>
                 <p class="text-xs text-gray-400 mb-2">February 10, 2026</p>
                 <h3 class="text-lg lg:text-xl font-bold text-primary mb-4">Zillow Isn't Telling You the Truth (and It's Not Even Sorry)</h3>
@@ -278,22 +278,11 @@
               </a>
             </div>
 
-            <!-- Featured Listing -->
-            <div class="mt-6">
+            <!-- Featured Listing (loaded dynamically) -->
+            <div id="featured-listing-container" class="mt-6 hidden">
               <h3 class="text-lg lg:text-xl font-bold text-primary mb-3 text-center">Featured Listing</h3>
-              <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <a href="https://www.flexmls.com/share/DR2AL/3880-N-Big-Spring-Drive-SW-Grandville-MI-49418" target="_blank" class="block group">
-                  <img src="https://cdn.resize.sparkplatform.com/ric/1600x1200/true/20260204232040814493000000-o.jpg" alt="3880 N Big Spring Drive SW, Grandville, MI" class="w-full h-48 object-cover group-hover:scale-105 transition duration-300">
-                </a>
-                <div class="p-4">
-                  <p class="text-2xl font-bold text-primary">$499,900</p>
-                  <p class="text-gray-700 font-medium mt-1">3880 N Big Spring Dr SW, Grandville, MI</p>
-                  <p class="text-gray-500 text-sm mt-1">4 bed • 3 bath • 2,400 sqft</p>
-                  <p class="text-gray-400 text-xs italic mt-2">Listed by Michelle Gordon, Five Star Real Estate</p>
-                  <a href="mailto:kevin@grar.com?subject=I'd%20Like%20to%20See%203880%20N%20Big%20Spring%20Dr%20SW" class="block w-full bg-primary hover:bg-accent text-white font-bold py-3 rounded-lg text-center mt-4 transition">
-                    Let's Go Look!
-                  </a>
-                </div>
+              <div id="featured-listing" class="bg-white rounded-lg shadow-lg overflow-hidden">
+                <!-- Loaded from Google Sheets -->
               </div>
             </div>
           </div>
@@ -458,6 +447,53 @@
     if (bannerImages.length > 1) {
       setInterval(rotateBanner, 4000);
     }
+
+    // Load featured listing from Google Sheets
+    async function loadFeaturedListing() {
+      try {
+        const response = await fetch('https://script.google.com/macros/s/AKfycbz9g7BFlNMQnt3Jas-94ZiG0iHvaXAmyaDkr6GWJWlZT6O4Y6CnXjQebEAcF-hD2sv2/exec?type=kevin_listing');
+        const data = await response.json();
+
+        if (data && data.photo) {
+          const container = document.getElementById('featured-listing-container');
+          const listing = document.getElementById('featured-listing');
+
+          const details = [];
+          if (data.beds) details.push(data.beds + ' bed');
+          if (data.baths) details.push(data.baths + ' bath');
+          if (data.sqft) details.push(data.sqft + ' sqft');
+
+          const emailSubject = encodeURIComponent("I'd Like to See " + data.address);
+
+          // Format price - only add $ and commas if not already formatted
+          let priceDisplay = data.price;
+          if (priceDisplay && !String(priceDisplay).includes('$')) {
+            priceDisplay = '$' + Number(priceDisplay).toLocaleString();
+          }
+
+          listing.innerHTML = `
+            <a href="${data.mls || '#'}" target="_blank" class="block group">
+              <img src="${data.photo}" alt="${data.address}" class="w-full h-48 object-cover group-hover:scale-105 transition duration-300">
+            </a>
+            <div class="p-4">
+              <p class="text-2xl font-bold text-primary">${priceDisplay}</p>
+              <p class="text-gray-700 font-medium mt-1">${data.address}</p>
+              ${details.length ? '<p class="text-gray-500 text-sm mt-1">' + details.join(' • ') + '</p>' : ''}
+              <p class="text-gray-400 text-xs italic mt-2">Listed by ${data.agent}</p>
+              <a href="mailto:kevin@grar.com?subject=${emailSubject}" class="block w-full bg-primary hover:bg-accent text-white font-bold py-3 rounded-lg text-center mt-4 transition">
+                Let's Go Look!
+              </a>
+            </div>
+          `;
+
+          container.classList.remove('hidden');
+        }
+      } catch (error) {
+        console.error('Error loading featured listing:', error);
+      }
+    }
+
+    loadFeaturedListing();
   </script>
 </body>
 </html>
