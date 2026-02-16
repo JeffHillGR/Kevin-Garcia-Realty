@@ -77,6 +77,31 @@
     .featured-cascade {
       animation: cascadeIn 0.6s ease-out forwards;
     }
+
+    /* Blog content images */
+    #teaser-content img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin: 8px 0;
+    }
+    #teaser-content img[style*="float: right"],
+    #teaser-content img[style*="float:right"] {
+      float: right;
+      margin: 0 0 12px 16px;
+      max-width: 50%;
+    }
+    #teaser-content img[style*="float: left"],
+    #teaser-content img[style*="float:left"] {
+      float: left;
+      margin: 0 16px 12px 0;
+      max-width: 50%;
+    }
+    #teaser-content::after {
+      content: "";
+      display: table;
+      clear: both;
+    }
   </style>
 </head>
 <body class="bg-gray-50">
@@ -239,23 +264,37 @@
           <div class="lg:w-3/5">
             <h2 id="insights" class="text-xl lg:text-2xl font-bold text-primary mb-4 lg:mb-6 text-center">Market Insights</h2>
             <div class="bg-white rounded-lg shadow-lg p-6 border-2 border-gray-800">
-              <article>
-                <p class="text-xs text-gray-400 mb-2">February 10, 2026</p>
-                <h3 class="text-lg lg:text-xl font-bold text-primary mb-4">Zillow Isn't Telling You the Truth (and It's Not Even Sorry)</h3>
-                <div class="text-gray-700 text-sm lg:text-base leading-relaxed space-y-4">
-                  <p>If Zillow were a person, it would be the friend who confidently gives directions and somehow sends you into a lake.</p>
-                  <p>Don't get me wrong, Zillow is useful. I check it. You check it. Your cousin who "almost became a realtor" checks it. But treating a Zestimate like gospel is where things go sideways.</p>
-                  <p>Here's the thing. Zillow doesn't see your house. It doesn't smell the fresh paint. It doesn't know you replaced the roof last year or that your neighbor collects rusty lawn sculptures. It doesn't feel the awkward layout, the surprisingly perfect natural light, or the fact that your basement ceiling is doing its best.</p>
-                  <p>Zestimates are based on algorithms, not emotions, and real estate is deeply emotional. Algorithms don't understand that buyers will pay more for a home that feels right, or less for one that reminds them of their aunt's house in 1997.</p>
-                  <p>I've seen Zestimates miss the mark by tens of thousands of dollars, both high and low. Overpricing because of an inflated Zestimate can cause a listing to sit, and nothing scares buyers like a house that's been lingering too long. Underpricing leaves money on the table, which hurts even more.</p>
-                  <p>Think of Zillow like a weather app. Helpful for a general forecast, but you still look outside before deciding what to wear.</p>
-                  <p>If you want a real value, you need a real person. Someone who knows your market, your street, your buyer pool, and how homes are actually performing, not how an algorithm guesses they might.</p>
-                  <p class="font-semibold text-primary">Zillow isn't evil. It's just not your agent.</p>
+              <!-- Loading state -->
+              <div id="insights-loading" class="text-center py-8">
+                <div class="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto"></div>
+                <p class="text-gray-500 text-sm mt-2">Loading...</p>
+              </div>
+              <!-- Placeholder when no posts -->
+              <div id="insights-placeholder" class="hidden text-center text-gray-400 py-8">
+                <p class="text-lg font-semibold mb-2">Coming Soon</p>
+                <p class="text-sm">Market updates will appear here</p>
+              </div>
+              <!-- Dynamic blog content -->
+              <div id="insights-teaser" class="hidden">
+                <article>
+                  <p id="teaser-date" class="text-xs text-gray-400 mb-2"></p>
+                  <p id="teaser-author" class="text-xs text-gray-600 mb-1"></p>
+                  <h3 id="teaser-title" class="text-lg lg:text-xl font-bold text-primary mb-4"></h3>
+                  <div id="teaser-content" class="text-gray-700 text-sm lg:text-base leading-relaxed space-y-4 prose"></div>
+                  <button onclick="openShareModal()" class="mt-6 flex items-center gap-2 text-primary hover:text-accent transition text-sm font-semibold">
+                    <i class="fas fa-share-alt"></i> Share This Article
+                  </button>
+                </article>
+                <!-- Navigation between posts -->
+                <div class="flex justify-between mt-6 pt-4 border-t border-gray-200">
+                  <button id="prev-insight" onclick="showInsight(currentInsightIndex + 1)" class="hidden text-sm text-primary hover:underline">
+                    &larr; <span id="prev-insight-title"></span>
+                  </button>
+                  <button id="next-insight" onclick="showInsight(currentInsightIndex - 1)" class="hidden text-sm text-primary hover:underline ml-auto">
+                    <span id="next-insight-title"></span> &rarr;
+                  </button>
                 </div>
-                <button onclick="openShareModal()" class="mt-6 flex items-center gap-2 text-primary hover:text-accent transition text-sm font-semibold">
-                  <i class="fas fa-share-alt"></i> Share This Article
-                </button>
-              </article>
+              </div>
             </div>
           </div>
 
@@ -560,6 +599,91 @@
     }
 
     loadFeaturedListing();
+
+    // Blog posts loading
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz9g7BFlNMQnt3Jas-94ZiG0iHvaXAmyaDkr6GWJWlZT6O4Y6CnXjQebEAcF-hD2sv2/exec';
+    let allBlogPosts = [];
+    let currentInsightIndex = 0;
+
+    async function loadBlogPosts() {
+      const loading = document.getElementById('insights-loading');
+      const placeholder = document.getElementById('insights-placeholder');
+      const teaser = document.getElementById('insights-teaser');
+
+      try {
+        const response = await fetch(GOOGLE_SCRIPT_URL + '?type=kevin_blog');
+        const posts = await response.json();
+
+        loading.classList.add('hidden');
+
+        if (!posts || posts.length === 0) {
+          placeholder.classList.remove('hidden');
+          return;
+        }
+
+        // Sort by date (newest first)
+        posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+        allBlogPosts = posts;
+        currentInsightIndex = 0;
+
+        teaser.classList.remove('hidden');
+        showInsight(0);
+      } catch (error) {
+        console.error('Error loading blog posts:', error);
+        loading.classList.add('hidden');
+        placeholder.classList.remove('hidden');
+      }
+    }
+
+    function showInsight(index) {
+      if (index < 0 || index >= allBlogPosts.length) return;
+
+      currentInsightIndex = index;
+      const post = allBlogPosts[index];
+
+      document.getElementById('teaser-title').textContent = post.title;
+      document.getElementById('teaser-date').textContent = new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+      const authorEl = document.getElementById('teaser-author');
+      if (post.author) {
+        authorEl.textContent = 'By ' + post.author;
+        authorEl.style.display = 'block';
+      } else {
+        authorEl.style.display = 'none';
+      }
+
+      // Render content with images
+      document.getElementById('teaser-content').innerHTML = post.content || '';
+
+      updateInsightNav();
+    }
+
+    function updateInsightNav() {
+      const prevBtn = document.getElementById('prev-insight');
+      const nextBtn = document.getElementById('next-insight');
+      const prevTitle = document.getElementById('prev-insight-title');
+      const nextTitle = document.getElementById('next-insight-title');
+
+      // Show/hide prev button (older posts)
+      if (currentInsightIndex < allBlogPosts.length - 1) {
+        const prevPost = allBlogPosts[currentInsightIndex + 1];
+        prevTitle.textContent = prevPost.title;
+        prevBtn.classList.remove('hidden');
+      } else {
+        prevBtn.classList.add('hidden');
+      }
+
+      // Show/hide next button (newer posts)
+      if (currentInsightIndex > 0) {
+        const nextPost = allBlogPosts[currentInsightIndex - 1];
+        nextTitle.textContent = nextPost.title;
+        nextBtn.classList.remove('hidden');
+      } else {
+        nextBtn.classList.add('hidden');
+      }
+    }
+
+    loadBlogPosts();
 
     // Share modal functions
     function openShareModal() {
