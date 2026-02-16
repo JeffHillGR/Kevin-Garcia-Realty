@@ -692,7 +692,10 @@
     // Share modal functions
     function openShareModal() {
       document.getElementById('share-modal').classList.remove('hidden');
-      document.getElementById('share-link').value = window.location.href.split('#')[0] + '#insights';
+      // Use API share URL for proper Open Graph tags on Facebook/LinkedIn
+      const currentPost = allBlogPosts[currentInsightIndex];
+      const postId = currentPost ? currentPost.id : '0';
+      document.getElementById('share-link').value = 'https://www.exploregr.com/api/share/' + postId;
     }
 
     function closeShareModal() {
