@@ -72,6 +72,11 @@
     .cascade-tile:nth-child(1) { animation-delay: 0.1s; }
     .cascade-tile:nth-child(2) { animation-delay: 0.2s; }
     .cascade-tile:nth-child(3) { animation-delay: 0.3s; }
+
+    /* Featured listing cascade animation */
+    .featured-cascade {
+      animation: cascadeIn 0.6s ease-out forwards;
+    }
   </style>
 </head>
 <body class="bg-gray-50">
@@ -206,7 +211,12 @@
           </a>
         </div>
 
-        <p class="mt-6 text-sm text-black text-center font-medium">Powered by REFresh<br>&copy; 2026</p>
+        <div class="mt-6 text-black text-sm">
+          <p class="font-bold text-center">Your Journey. Our Mission.</p>
+          <p class="mt-2">I am passionate about our clients: their goals, their achievements and where they want to be in the future… their journey. By understanding your real estate needs and always acting in your best interest, we make Your Journey, Our Mission.</p>
+        </div>
+
+        <p class="text-sm text-black text-center font-medium" style="margin-top: 300px;">Website Powered by REFresh<br>&copy; 2026</p>
 
       </div>
     </aside>
@@ -294,19 +304,22 @@
 
       <!-- Testimonials -->
       <section id="testimonials" class="py-6 lg:py-12 px-6 md:px-12 bg-white">
-        <h2 class="text-xl lg:text-2xl font-bold text-primary mb-4 text-center">What My Clients Are Saying</h2>
+        <h2 class="text-xl lg:text-2xl font-bold text-primary mb-4 text-center">What Some of My Clients Are Saying</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
           <div class="bg-gray-50 rounded-lg p-6">
             <i class="fas fa-quote-left text-2xl text-gold mb-3"></i>
             <p class="text-gray-700 italic text-sm lg:text-base mb-4">"Kevin has gone above and beyond in the selling of our home. He is also helping us buy our next home and has proven knowledgeable, reasonable and a perfect advocate for what is in our best interest. I would recommend Kevin 101%!"</p>
+            <p class="text-primary font-semibold text-sm">— Demetria Friberg</p>
           </div>
           <div class="bg-gray-50 rounded-lg p-6">
             <i class="fas fa-quote-left text-2xl text-gold mb-3"></i>
-            <p class="text-gray-700 italic text-sm lg:text-base mb-4">"Kevin proved to be a real asset in helping me to purchase the right property at the right time and at the right price! His understanding of the real estate market and the purchase process helped make our transaction as easy as it was fun! In fact, Kevin is helping me with another property as of this writing! Thanks Kevin!"</p>
+            <p class="text-gray-700 italic text-sm lg:text-base mb-4">"Kevin Garcia was incredibly attentive, providing valuable insights and guidance throughout the entire process. His responsiveness and willingness to go the extra mile made everything seamless and stress-free. Thank you so much!!!!"</p>
+            <p class="text-primary font-semibold text-sm">— Kenzie Elizabeth</p>
           </div>
           <div class="bg-gray-50 rounded-lg p-6">
             <i class="fas fa-quote-left text-2xl text-gold mb-3"></i>
-            <p class="text-gray-700 italic text-sm lg:text-base mb-4">"Kevin's knowledge of market conditions and pricing made our home sale quick and we got offers higher than asking. I wouldn't use any other agent. It had been some time since we had purchased or sold a home and he made it so easy. Kevin is a pleasure to work with."</p>
+            <p class="text-gray-700 italic text-sm lg:text-base mb-4">"Had a great first time home buying experience thanks to Kevin! Would 100 percent recommend for all your real estate needs!"</p>
+            <p class="text-primary font-semibold text-sm">— Justin Macgregor</p>
           </div>
         </div>
       </section>
@@ -327,6 +340,28 @@
         </div>
       </section>
 
+      <!-- More Testimonials -->
+      <section class="py-6 lg:py-12 px-6 md:px-12 bg-white">
+        <h2 class="text-xl lg:text-2xl font-bold text-primary mb-4 text-center">But Wait, There's More!</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          <div class="bg-gray-50 rounded-lg p-6">
+            <i class="fas fa-quote-left text-2xl text-gold mb-3"></i>
+            <p class="text-gray-700 italic text-sm lg:text-base mb-4">"Kevin's knowledge of market conditions and pricing made our home sale quick and we got offers higher than asking. I wouldn't use any other agent. It had been some time since we had purchased or sold a home and he made it so easy. Kevin is a pleasure to work with."</p>
+            <p class="text-primary font-semibold text-sm">— Larry Cluchey</p>
+          </div>
+          <div class="bg-gray-50 rounded-lg p-6">
+            <i class="fas fa-quote-left text-2xl text-gold mb-3"></i>
+            <p class="text-gray-700 italic text-sm lg:text-base mb-4">"Kevin was wonderful to work with and would highly recommend him for any real estate needs. He was passionate and supportive throughout our long journey. Very grateful and thankful for his knowledge and kindness."</p>
+            <p class="text-primary font-semibold text-sm">— Doug Snow</p>
+          </div>
+          <div class="bg-gray-50 rounded-lg p-6">
+            <i class="fas fa-quote-left text-2xl text-gold mb-3"></i>
+            <p class="text-gray-700 italic text-sm lg:text-base mb-4">"Kevin has been a great realtor, he listened to all of our requirements for our house. He put forth time and effort into finding the best house for us. As new home buyers he educated us on the do's and don'ts of home buying. We are so grateful to having Kevin as our first realtor and looking forward to working with him again when the time comes."</p>
+            <p class="text-primary font-semibold text-sm">— Paul Balgenorth</p>
+          </div>
+        </div>
+      </section>
+
       <!-- My Sold Homes -->
       <section id="recently-sold" class="py-12 px-6 md:px-12 bg-gray-50">
         <div class="max-w-6xl mx-auto">
@@ -341,19 +376,43 @@
               </div>
             </div>
             <div class="bg-white rounded-lg shadow-md overflow-hidden">
-              <img src="images/Sharon-Avenue.png" alt="3418 Sharon Ave" class="w-full h-48 object-cover">
-              <div class="p-4">
-                <p class="text-gray-600 text-sm">3418 Sharon Ave</p>
-                <p class="text-gray-500 text-xs">Wyoming, Michigan</p>
-                <p class="text-lg font-bold text-primary mt-2">$305,000</p>
-              </div>
-            </div>
-            <div class="bg-white rounded-lg shadow-md overflow-hidden">
               <img src="images/Penny-Lane.png" alt="4418 Penny Lane" class="w-full h-48 object-cover">
               <div class="p-4">
                 <p class="text-gray-600 text-sm">4418 Penny Lane</p>
                 <p class="text-gray-500 text-xs">Wyoming, Michigan</p>
                 <p class="text-lg font-bold text-primary mt-2">$355,000</p>
+              </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+              <img src="images/111 Campau Circle.jpg" alt="111 Campau Circle NW 1809" class="w-full h-48 object-cover">
+              <div class="p-4">
+                <p class="text-gray-600 text-sm">111 Campau Circle NW 1809</p>
+                <p class="text-gray-500 text-xs">Grand Rapids, Michigan</p>
+                <p class="text-lg font-bold text-primary mt-2">$230,000</p>
+              </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+              <img src="images/Pictured Rock.jpg" alt="8906 Pictured Rock Dr SW" class="w-full h-48 object-cover">
+              <div class="p-4">
+                <p class="text-gray-600 text-sm">8906 Pictured Rock Dr SW</p>
+                <p class="text-gray-500 text-xs">Wyoming, Michigan</p>
+                <p class="text-lg font-bold text-primary mt-2">$430,000</p>
+              </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+              <img src="images/2773 Beechtree Dr SW.jpg" alt="2773 Beechtree Dr SW" class="w-full h-48 object-cover">
+              <div class="p-4">
+                <p class="text-gray-600 text-sm">2773 Beechtree Dr SW</p>
+                <p class="text-gray-500 text-xs">Wyoming, Michigan</p>
+                <p class="text-lg font-bold text-primary mt-2">$618,500</p>
+              </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+              <img src="images/Hess Lake.jpg" alt="1199 East Hess Lake Dr" class="w-full h-48 object-cover">
+              <div class="p-4">
+                <p class="text-gray-600 text-sm">1199 East Hess Lake Dr</p>
+                <p class="text-gray-500 text-xs">Grant, Michigan</p>
+                <p class="text-lg font-bold text-primary mt-2">$378,000</p>
               </div>
             </div>
           </div>
@@ -490,6 +549,7 @@
           `;
 
           container.classList.remove('hidden');
+          container.classList.add('featured-cascade');
         }
       } catch (error) {
         console.error('Error loading featured listing:', error);
