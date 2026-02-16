@@ -252,6 +252,9 @@
                   <p>If you want a real value, you need a real person. Someone who knows your market, your street, your buyer pool, and how homes are actually performing, not how an algorithm guesses they might.</p>
                   <p class="font-semibold text-primary">Zillow isn't evil. It's just not your agent.</p>
                 </div>
+                <button onclick="openShareModal()" class="mt-6 flex items-center gap-2 text-primary hover:text-accent transition text-sm font-semibold">
+                  <i class="fas fa-share-alt"></i> Share This Article
+                </button>
               </article>
             </div>
           </div>
@@ -557,6 +560,54 @@
     }
 
     loadFeaturedListing();
+
+    // Share modal functions
+    function openShareModal() {
+      document.getElementById('share-modal').classList.remove('hidden');
+      document.getElementById('share-link').value = window.location.href.split('#')[0] + '#insights';
+    }
+
+    function closeShareModal() {
+      document.getElementById('share-modal').classList.add('hidden');
+      document.getElementById('copy-success').classList.add('hidden');
+    }
+
+    function copyLink() {
+      const linkInput = document.getElementById('share-link');
+      linkInput.select();
+      navigator.clipboard.writeText(linkInput.value);
+      document.getElementById('copy-success').classList.remove('hidden');
+      setTimeout(() => {
+        document.getElementById('copy-success').classList.add('hidden');
+      }, 2000);
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('share-modal').addEventListener('click', function(e) {
+      if (e.target === this) closeShareModal();
+    });
   </script>
+
+  <!-- Share Modal -->
+  <div id="share-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-bold text-primary">Share This Article</h3>
+        <button onclick="closeShareModal()" class="text-gray-400 hover:text-gray-600">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+      <p class="text-gray-600 text-sm mb-4">Copy the link below to share this article:</p>
+      <div class="flex gap-2">
+        <input type="text" id="share-link" readonly class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm bg-gray-50">
+        <button onclick="copyLink()" class="bg-primary hover:bg-accent text-white px-4 py-2 rounded-lg font-semibold transition">
+          <i class="fas fa-copy"></i> Copy
+        </button>
+      </div>
+      <p id="copy-success" class="hidden text-green-600 text-sm mt-2 flex items-center gap-1">
+        <i class="fas fa-check-circle"></i> Link copied to clipboard!
+      </p>
+    </div>
+  </div>
 </body>
 </html>
