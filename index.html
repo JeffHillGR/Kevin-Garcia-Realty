@@ -270,7 +270,7 @@
           <!-- Left: Insights Card -->
           <div class="lg:w-3/5">
             <h2 id="insights" class="text-xl lg:text-2xl font-bold text-primary mb-4 lg:mb-6 text-center">Market Insights</h2>
-            <div class="bg-white rounded-lg shadow-lg p-6 border-2 border-gray-800">
+            <div class="bg-white rounded-lg shadow-lg p-6 border-2 border-gray-800 lg:h-[1050px] lg:overflow-hidden lg:flex lg:flex-col">
               <!-- Loading state -->
               <div id="insights-loading" class="text-center py-8">
                 <div class="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto"></div>
@@ -282,15 +282,20 @@
                 <p class="text-sm">Market updates will appear here</p>
               </div>
               <!-- Dynamic blog content -->
-              <div id="insights-teaser" class="hidden">
-                <article>
-                  <p id="teaser-date" class="text-xs text-gray-400 mb-2"></p>
-                  <p id="teaser-author" class="text-xs text-gray-600 mb-1"></p>
-                  <h3 id="teaser-title" class="text-lg lg:text-xl font-bold text-primary mb-4"></h3>
-                  <div id="teaser-content" class="text-gray-700 text-sm lg:text-base leading-relaxed space-y-4 prose"></div>
-                  <button onclick="openShareModal()" class="mt-6 flex items-center gap-2 text-primary hover:text-accent transition text-sm font-semibold">
-                    <i class="fas fa-share-alt"></i> Share This Article
-                  </button>
+              <div id="insights-teaser" class="hidden lg:flex lg:flex-col lg:flex-1 lg:overflow-hidden">
+                <article class="lg:flex lg:flex-col lg:flex-1 lg:overflow-hidden">
+                  <p id="teaser-date" class="text-xs text-gray-400 mb-2 lg:flex-shrink-0"></p>
+                  <p id="teaser-author" class="text-xs text-gray-600 mb-1 lg:flex-shrink-0"></p>
+                  <h3 id="teaser-title" class="text-lg lg:text-xl font-bold text-primary mb-4 lg:flex-shrink-0"></h3>
+                  <div id="teaser-content" class="text-gray-700 text-sm lg:text-base leading-relaxed space-y-4 prose lg:flex-1 lg:overflow-hidden"></div>
+                  <div class="mt-4 flex justify-center gap-6 lg:flex-shrink-0">
+                    <button onclick="openInsightsModal()" class="text-primary font-semibold text-sm hover:underline">
+                      Read more &rarr;
+                    </button>
+                    <button onclick="openShareModal()" class="text-primary font-semibold text-sm hover:underline flex items-center gap-1">
+                      Share <i class="fas fa-share-alt"></i>
+                    </button>
+                  </div>
                 </article>
                 <!-- Navigation between posts -->
                 <div class="flex justify-between mt-6 pt-4 border-t border-gray-200">
@@ -743,5 +748,57 @@
       </p>
     </div>
   </div>
+
+  <!-- Insights Modal -->
+  <div id="insights-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div class="p-6">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-xl font-bold text-primary">Market Insights</h3>
+          <button onclick="closeInsightsModal()" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+        </div>
+        <div id="insights-modal-content" class="space-y-8">
+          <!-- Post content will be rendered here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Insights modal functions
+    function openInsightsModal() {
+      if (allBlogPosts.length === 0) return;
+
+      const modal = document.getElementById('insights-modal');
+      const content = document.getElementById('insights-modal-content');
+
+      const currentPost = allBlogPosts[currentInsightIndex];
+      const postContent = currentPost.content || '';
+
+      const authorHtml = currentPost.author ? `<p class="text-xs text-gray-600 mb-1">By ${currentPost.author}</p>` : '';
+
+      content.innerHTML = `
+        <article>
+          <h3 class="text-lg font-bold text-primary mb-1">${currentPost.title}</h3>
+          ${authorHtml}
+          <p class="text-xs text-gray-500 mb-3">${new Date(currentPost.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+          <div class="text-gray-700 text-sm prose">${postContent}</div>
+        </article>
+      `;
+
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeInsightsModal() {
+      document.getElementById('insights-modal').classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+
+    // Close insights modal on background click
+    document.getElementById('insights-modal').addEventListener('click', function(e) {
+      if (e.target === this) closeInsightsModal();
+    });
+  </script>
 </body>
 </html>
