@@ -420,6 +420,11 @@
         if (url) {
           var range = quill.getSelection();
           quill.insertEmbed(range ? range.index : 0, 'image', url);
+          // Auto-populate the image column with the first image added
+          var postImageField = document.getElementById('post-image');
+          if (!postImageField.value) {
+            postImageField.value = url;
+          }
         }
       });
 
@@ -564,7 +569,7 @@
     async function savePost() {
       const title = document.getElementById('post-title').value.trim();
       const author = document.getElementById('post-author').value.trim();
-      const image = document.getElementById('post-image').value.trim();
+      let image = document.getElementById('post-image').value.trim();
       const content = quill.root.innerHTML;
       const editId = document.getElementById('edit-post-id').value;
 
@@ -576,6 +581,15 @@
       if (quill.getText().trim().length < 10) {
         alert('Please enter some content');
         return;
+      }
+
+      // Auto-extract first image from content if no image field set
+      if (!image && content) {
+        const imgMatch = content.match(/<img[^>]+src=["']([^"']+)["']/i);
+        if (imgMatch) {
+          image = imgMatch[1];
+          document.getElementById('post-image').value = image;
+        }
       }
 
       const postData = {
