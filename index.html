@@ -703,14 +703,39 @@
       const placeholder = document.getElementById('insights-placeholder');
       const teaser = document.getElementById('insights-teaser');
 
+      // Check for cached posts first - show immediately
+      const cached = localStorage.getItem('kevinBlogCache');
+      if (cached) {
+        try {
+          const cachedData = JSON.parse(cached);
+          if (cachedData.posts && cachedData.posts.length > 0) {
+            cachedData.posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+            allBlogPosts = cachedData.posts;
+            currentInsightIndex = 0;
+            loading.classList.add('hidden');
+            teaser.classList.remove('hidden');
+            showInsight(0);
+          }
+        } catch (e) {
+          // Invalid cache, ignore
+        }
+      }
+
+      // Fetch fresh data in background
       try {
         const response = await fetch(GOOGLE_SCRIPT_URL + '?type=kevin_blog');
         const posts = await response.json();
 
+        // Cache the posts
+        localStorage.setItem('kevinBlogCache', JSON.stringify({
+          posts: posts,
+          timestamp: Date.now()
+        }));
+
         loading.classList.add('hidden');
 
         if (!posts || posts.length === 0) {
-          placeholder.classList.remove('hidden');
+          if (!cached) placeholder.classList.remove('hidden');
           return;
         }
 
@@ -724,7 +749,7 @@
       } catch (error) {
         console.error('Error loading blog posts:', error);
         loading.classList.add('hidden');
-        placeholder.classList.remove('hidden');
+        if (!cached) placeholder.classList.remove('hidden');
       }
     }
 
