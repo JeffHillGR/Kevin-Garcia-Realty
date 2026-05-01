@@ -330,7 +330,7 @@
     const ADMIN_PASSWORD = 'Kevin2026';
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz9g7BFlNMQnt3Jas-94ZiG0iHvaXAmyaDkr6GWJWlZT6O4Y6CnXjQebEAcF-hD2sv2/exec';
     const BLOG_TYPE = 'kevin_blog';
-    const LISTING_TYPE = 'kevin_listing';
+    const LISTING_TYPE = 'listing';
 
     let quill;
     let postsCache = [];
@@ -753,7 +753,7 @@
     // Featured Listing Functions
     async function loadFeaturedListing() {
       try {
-        const response = await fetch(GOOGLE_SCRIPT_URL + '?type=kevin_listing');
+        const response = await fetch(GOOGLE_SCRIPT_URL + '?type=listing');
         const data = await response.json();
 
         if (data && data.photo) {

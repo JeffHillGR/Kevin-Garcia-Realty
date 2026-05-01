@@ -650,7 +650,7 @@
     // Load featured listing from Google Sheets
     async function loadFeaturedListing() {
       try {
-        const response = await fetch('https://script.google.com/macros/s/AKfycbz9g7BFlNMQnt3Jas-94ZiG0iHvaXAmyaDkr6GWJWlZT6O4Y6CnXjQebEAcF-hD2sv2/exec?type=kevin_listing');
+        const response = await fetch('https://script.google.com/macros/s/AKfycbz9g7BFlNMQnt3Jas-94ZiG0iHvaXAmyaDkr6GWJWlZT6O4Y6CnXjQebEAcF-hD2sv2/exec?type=listing');
         const data = await response.json();
 
         if (data && data.photo) {
